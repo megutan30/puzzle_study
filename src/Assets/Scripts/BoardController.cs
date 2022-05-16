@@ -29,19 +29,11 @@ public class BoardController : MonoBehaviour
     void Start()
     {
         ClearAll();
-
-        for(int y=0;y<BOARD_HEIGHT;y++)
-        {
-            for (int x = 0; x < BOARD_WIDTH; x++)
-            {
-                Settle(new Vector2Int(x, y), Random.Range(1, 7));
-            }
-        }
     }
 
     public static bool IsValidated(Vector2Int pos)
     {
-        return 0 <= pos.x && pos.y < BOARD_WIDTH
+        return 0 <= pos.x && pos.x < BOARD_WIDTH
             && 0 <= pos.y && pos.y < BOARD_HEIGHT;
     }
 

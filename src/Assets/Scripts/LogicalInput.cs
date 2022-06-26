@@ -44,7 +44,7 @@ public class LogicalInput
         return inputRep.HasFlag(k);
     }
 
-    public void Cleat()
+    public void Clear()
     {
         inputRaw = 0;
         inputTrg = 0;

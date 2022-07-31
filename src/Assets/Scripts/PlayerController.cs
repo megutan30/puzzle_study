@@ -37,6 +37,9 @@ public class PlayerController : MonoBehaviour
     int _fallCount = 0;
     int _groundFrame = GROUND_FRAMES;//接地時間
 
+    //得点
+    uint _addtiveScore = 0;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -217,6 +220,8 @@ public class PlayerController : MonoBehaviour
             _fallCount += FALL_COUNT_UNIT;
         }
 
+        if (is_fast) _addtiveScore++;//下に入れて、落ちれるときはボーナス追加
+
         return true;
     }
 
@@ -287,4 +292,14 @@ public class PlayerController : MonoBehaviour
         theta = thetal0 + rate * theta;
         return p + new Vector3(Mathf.Sin(theta), Mathf.Cos(theta), 0.0f);
     }
+
+    //得点の受け渡し
+    public uint popScore()
+    {
+        uint score = _addtiveScore;
+        _addtiveScore = 0;
+
+        return score;
+    }
+
 }

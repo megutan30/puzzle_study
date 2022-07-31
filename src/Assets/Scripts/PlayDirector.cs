@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 interface IState
 {
@@ -31,6 +32,11 @@ public class PlayDirector : MonoBehaviour
 
     NextQueue _nextQueue = new();
     [SerializeField] PuyoPair[] nextPuyoPairs = { default!, default! };
+
+    //得点
+    [SerializeField] TextMeshProUGUI textScore = default!;
+    uint _score = 0;
+    int _chainCount = -1;//連鎖数（得点計算に必要）-1は初期化用 Magic nunber
 
     //状態管理
     IState.E_State _current_state = IState.E_State.Falling;
@@ -126,7 +132,12 @@ public class PlayDirector : MonoBehaviour
     {
         public IState.E_State Initialize(PlayDirector parent)
         {
-            return parent._boardController.CheckErase() ? IState.E_State.Unchanged : IState.E_State.Control;
+            if (parent._boardController.CheckErase(parent._chainCount++))
+            {
+                return IState.E_State.Unchanged;//消すアニメーションに突入
+            }
+            parent._chainCount = 0;//連鎖が切れた
+            return IState.E_State.Control;//消すものはない
         }
         public IState.E_State Update(PlayDirector parent)
         {
@@ -166,6 +177,21 @@ public class PlayDirector : MonoBehaviour
     {
         //入力を取り込む
         Updatelnput();
+
         UpdateState();
+
+        AddScore(_playerController.popScore());
+        AddScore(_boardController.popScore());
     }
+
+    void SetScore(uint score)
+    {
+        _score = score;
+        textScore.text = _score.ToString();
+    }
+    void AddScore(uint score)
+    {
+        if (0 < score) SetScore(_score + score);
+    }
+
 }
